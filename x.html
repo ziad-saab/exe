@@ -1,0 +1,76 @@
+<!doctype html>
+<meta charset="utf-8"/>
+<style>
+    body {
+        line-height: 1;
+        font-size: 0;
+        font-family: sans-serif;
+        font-weight: bold;
+    }
+    @-webkit-keyframes toupie {
+        from {
+            transform: rotate(0deg);
+            color: hsl(0, 80%, 50%);
+        }
+        to {
+            transform: rotate(360deg);
+            color: hsl(60, 80%, 50%);
+        }
+     }
+    span {
+        display: inline-block;
+        padding: 0px;
+        font-size: 24px;
+        position: absolute;
+    }
+    span.hover {
+        -webkit-animation-name: toupie;
+        -webkit-animation-duration: 500ms;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-timing-function: linear;
+    }
+</style>
+<span>❤</span>
+
+<script src="https://code.jquery.com/jquery-1.11.2.js"></script>
+<script>
+    var $span = $('span');
+
+    var width = $span.outerWidth();
+    var height = $span.outerHeight();
+
+    $span.remove();
+
+    var numHorizontal = Math.floor($(window).width() / width);
+    var numVertical = Math.floor($(window).height() / height);
+
+    var $body = $('body');
+    for (var i = 0 ; i< numHorizontal; i++) {
+        for (var j = 0; j < numVertical; j++) {
+            $('<span>❤</span>').appendTo($body).css({top: height * j, left: width * i});
+        }
+    }
+
+    var mult = 0;
+
+    $('body').on('keydown', function(e) {
+        if (e.keyCode >= 48 && e.keyCode <= 57) {
+            mult = e.keyCode - 48;
+        }
+    })
+
+    $('body').on('mouseenter', 'span', function() {
+        this.className = 'hover';
+        if (this.timer) {
+            clearTimeout(this.timer);
+            delete this.timer;
+        }
+    });
+    $('body').on('mouseleave', 'span', function() {
+        var that = this;
+        this.timer = setTimeout(function() {
+                that.className = '';
+                delete that.timer;
+        }, mult * 1000);
+    });
+</script>
